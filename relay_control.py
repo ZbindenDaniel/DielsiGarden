@@ -15,13 +15,15 @@ thresholds = config['thresholds']
 hold_times = config['hold_times']
 
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(relay_pins['relay1'], GPIO.OUT)
-GPIO.setup(relay_pins['relay2'], GPIO.OUT)
 
 logging.basicConfig(filename='/home/pi/repos/DielsiGarden/logs/relay_control.log', level=logging.INFO)
 
 def switch_relay(pin, state):
-    GPIO.output(pin, state)
+    if state == GPIO.HIGH:
+        GPIO.setup(pin, GPIO.IN)
+    else:
+        GPIO.setup(pin, GPIO.OUT)
+        
     logging.info(f"Relay {pin} switched to {'ON' if state else 'OFF'}")
 
 def get_interpolated_sensor_data(sensor_name):
@@ -51,14 +53,15 @@ if __name__ == "__main__":
             logging.info(f"Interpolated data for {sensor_name}: {data}")
             
             # Check the sensor data and control the relays accordingly
-            if data < thresholds['relay1']['min']:  # Example condition for relay 1
-                switch_relay(relay_pins['relay1'], GPIO.HIGH)
-                time.sleep(hold_times['relay1'])  # Keep relay on for desired duration
+            if data < thresholds['relay1']['lower']:
                 switch_relay(relay_pins['relay1'], GPIO.LOW)
-            elif data > thresholds['relay2']['max']:  # Example condition for relay 2
-                switch_relay(relay_pins['relay2'], GPIO.HIGH)
-                time.sleep(hold_times['relay2'])  # Keep relay on for desired duration
+            elif data > thresholds['relay1']['upper']:
+                switch_relay(relay_pins['relay1'], GPIO.HIGH)
+                
+            if data < thresholds['relay2']['lower']:
                 switch_relay(relay_pins['relay2'], GPIO.LOW)
+            elif data > thresholds['relay2']['upper']:
+                switch_relay(relay_pins['relay2'], GPIO.HIGH)
             
     except KeyboardInterrupt:
         GPIO.cleanup()

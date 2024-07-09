@@ -1,20 +1,20 @@
 {
     "relay_pins": {
-        "relay1": 17,
-        "relay2": 27
+        "relay1": 10,
+        "relay2": 9
     },
     "thresholds": {
         "relay1": {
-            "min": 20,
-            "max": 50
+            "upper": 12,
+            "lower": 5
         },
         "relay2": {
-            "min": 51,
-            "max": 80
+            "upper": 10,
+            "lower": 6
         }
     },
     "hold_times": {
-        "relay1": 3,
-        "relay2": 6
+        "relay1": 1,
+        "relay2": 3
     }
 }

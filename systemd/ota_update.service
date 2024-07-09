@@ -4,9 +4,10 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
+Type=oneshot
+RemainAfterExit=true
 User=pi
 ExecStart=/home/pi/repos/DielsiGarden/scripts/data_sync.sh
-Restart=always
 
 [Install]
 WantedBy=multi-user.target

@@ -17,12 +17,16 @@ apt-get install pipx
 pipx install numpy
 
 # Setup OTA cron jobs
-CRON_JOB="0 * * * * /home/pi/my-repo/scripts/update_from_github.sh" # every hour, assuming there is a network connection
-(crontab -l 2>/dev/null | grep -v "scripts/update_from_github.sh"; echo "$CRON_JOB") | crontab -
+# CRON_JOB="1 * * * * /home/pi/my-repo/scripts/update_from_github.sh" # every hour, assuming there is a network connection
+# (crontab -l 2>/dev/null | grep -v "scripts/update_from_github.sh"; echo "$CRON_JOB") | crontab -
 
 # Setup camera job
 CRON_JOB="0 5-22 * * * /usr/bin/python3 /home/pi/repos/DielsiGarden/take_image.py"
 (crontab -l 2>/dev/null | grep -v "take_image.py"; echo "$CRON_JOB") | crontab -
+
+# Setup relay job
+CRON_JOB="0,15,30,45 * * * * /usr/bin/python3 /home/pi/repos/DielsiGarden/relay_control.py"
+(crontab -l 2>/dev/null | grep -v "test.py"; echo "$CRON_JOB") | crontab -
 
 # Setup test job
 CRON_JOB="* * * * * /usr/bin/python3 /home/pi/repos/DielsiGarden/test.py"
