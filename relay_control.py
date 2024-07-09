@@ -18,7 +18,7 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(relay_pins['relay1'], GPIO.OUT)
 GPIO.setup(relay_pins['relay2'], GPIO.OUT)
 
-logging.basicConfig(filename='/var/log/relay_control.log', level=logging.INFO)
+logging.basicConfig(filename='/home/pi/repos/DielsiGarden/logs/relay_control.log', level=logging.INFO)
 
 def switch_relay(pin, state):
     GPIO.output(pin, state)
@@ -45,23 +45,21 @@ def get_interpolated_sensor_data(sensor_name):
 
 if __name__ == "__main__":
     try:
-        while True:
-            sensor_name = "YourSensorName"  # Replace with your actual sensor name
-            data = get_interpolated_sensor_data(sensor_name)
-            if data is not None:
-                logging.info(f"Interpolated data for {sensor_name}: {data}")
-                
-                # Check the sensor data and control the relays accordingly
-                if data < thresholds['relay1']['min']:  # Example condition for relay 1
-                    switch_relay(relay_pins['relay1'], GPIO.HIGH)
-                    time.sleep(hold_times['relay1'])  # Keep relay on for desired duration
-                    switch_relay(relay_pins['relay1'], GPIO.LOW)
-                elif data > thresholds['relay2']['max']:  # Example condition for relay 2
-                    switch_relay(relay_pins['relay2'], GPIO.HIGH)
-                    time.sleep(hold_times['relay2'])  # Keep relay on for desired duration
-                    switch_relay(relay_pins['relay2'], GPIO.LOW)
-                
-            time.sleep(1800)  # Sleep for 30 minutes
+        sensor_name = "YourSensorName"  # Replace with your actual sensor name
+        data = 7 #TODO: get_interpolated_sensor_data(sensor_name)
+        if data is not None:
+            logging.info(f"Interpolated data for {sensor_name}: {data}")
+            
+            # Check the sensor data and control the relays accordingly
+            if data < thresholds['relay1']['min']:  # Example condition for relay 1
+                switch_relay(relay_pins['relay1'], GPIO.HIGH)
+                time.sleep(hold_times['relay1'])  # Keep relay on for desired duration
+                switch_relay(relay_pins['relay1'], GPIO.LOW)
+            elif data > thresholds['relay2']['max']:  # Example condition for relay 2
+                switch_relay(relay_pins['relay2'], GPIO.HIGH)
+                time.sleep(hold_times['relay2'])  # Keep relay on for desired duration
+                switch_relay(relay_pins['relay2'], GPIO.LOW)
+            
     except KeyboardInterrupt:
         GPIO.cleanup()
         logging.info("Cleaned up GPIO")

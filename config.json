@@ -14,7 +14,7 @@
         }
     },
     "hold_times": {
-        "relay1": 3600,
-        "relay2": 3600
+        "relay1": 3,
+        "relay2": 6
     }
 }

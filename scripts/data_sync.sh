@@ -1,10 +1,9 @@
 #!/bin/bash
 
+echo 'connected to network syncing data...'
+
 REPO_URL="https://github.com/ZbindenDaniel/DielsiGarden.git"
 LOCAL_DIR="/home/pi/repos/DielsiGarden"
-
-# Updatin
-sudo apt-get update && sudo apt-get upgrade -y
 
 # Navigate to the project directory
 cd $LOCAL_DIR
@@ -19,5 +18,3 @@ git commit -m $msg
 git push
  
 echo "sync completed"
-
-echo "run setup"
