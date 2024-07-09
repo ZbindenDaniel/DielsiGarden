@@ -1,0 +1,12 @@
+[Unit]
+Description=Bluetooth Sensor Service
+After=network.target
+
+[Service]
+User=pi
+WorkingDirectory=/home/pi/repos/DielsiGarden
+ExecStart=/usr/bin/python3 /home/pi/repos/DielsiGarden/bluetooth_sensor.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
