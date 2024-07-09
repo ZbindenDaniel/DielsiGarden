@@ -28,9 +28,12 @@ CRON_JOB="0 5-22 * * * /usr/bin/python3 /home/pi/repos/DielsiGarden/take_image.p
 CRON_JOB="* * * * * /usr/bin/python3 /home/pi/repos/DielsiGarden/test.py"
 (crontab -l 2>/dev/null | grep -v "test.py"; echo "$CRON_JOB") | crontab -
 
-sudo systemctl daemon-reload
-sudo systemctl enable ota_update.service
-sudo systemctl start ota_update.service
-sudo systemctl daemon-reload
+# Copy systemd service files to /etc/systemd/system/
+cp $REPO_DIR/systemd/*.service /etc/systemd/system/
+
+systemctl daemon-reload
+systemctl enable ota_update.service
+systemctl start ota_update.service
+systemctl daemon-reload
 
 echo "Setup completed successfully."

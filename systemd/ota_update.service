@@ -1,11 +1,11 @@
 [Unit]
 Description=OTA Update Service
+Wants=network-online.target
 After=network-online.target
 
 [Service]
 User=pi
-WorkingDirectory=/home/pi/repos/DielsiGarden
-ExecStart=/usr/bin/python3 /home/pi/repos/DielsiGarden/scripts/data_sync.sh
+ExecStart=/home/pi/repos/DielsiGarden/scripts/data_sync.sh
 Restart=always
 
 [Install]
