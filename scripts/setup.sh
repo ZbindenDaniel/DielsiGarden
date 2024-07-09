@@ -16,6 +16,9 @@ chmod +x $REPO_DIR/scripts/*.sh
 apt-get install pipx
 pipx install numpy
 
+# Copy systemd service files to /etc/systemd/system/
+cp $REPO_DIR/systemd/*.service /etc/systemd/system/
+
 # Setup OTA cron jobs
 # CRON_JOB="1 * * * * /home/pi/my-repo/scripts/update_from_github.sh" # every hour, assuming there is a network connection
 # (crontab -l 2>/dev/null | grep -v "scripts/update_from_github.sh"; echo "$CRON_JOB") | crontab -
@@ -31,9 +34,6 @@ CRON_JOB="0,15,30,45 * * * * /usr/bin/python3 /home/pi/repos/DielsiGarden/relay_
 # Setup test job
 CRON_JOB="* * * * * /usr/bin/python3 /home/pi/repos/DielsiGarden/test.py"
 (crontab -l 2>/dev/null | grep -v "test.py"; echo "$CRON_JOB") | crontab -
-
-# Copy systemd service files to /etc/systemd/system/
-cp $REPO_DIR/systemd/*.service /etc/systemd/system/
 
 systemctl daemon-reload
 systemctl enable ota_update.service
