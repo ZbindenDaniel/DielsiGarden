@@ -12,4 +12,4 @@ cd $LOCAL_DIR
 # Pull the latest changes from the repository
 git pull $REPO_URL
 
-echo "Update completed and services restarted"
+echo "pull completed"
