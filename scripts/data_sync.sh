@@ -13,8 +13,7 @@ git pull $REPO_URL
 
 git stage logs/*
 git stage img/*
-msg='fromPi '$(date +"%Y-%m-%d_%H%M")
-git commit -m $msg
+git commit -m 'fromPi '$(date +"%Y-%m-%d_%H%M")
 git push
  
 echo "sync completed"
