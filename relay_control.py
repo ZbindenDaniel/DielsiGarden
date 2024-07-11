@@ -1,3 +1,4 @@
+import datetime
 import RPi.GPIO as GPIO
 import sqlite3
 import sys
@@ -5,6 +6,7 @@ import logging
 import time
 import json
 import numpy as np
+import random
 
 # Load configuration
 with open('/home/pi/repos/DielsiGarden/config.json', 'r') as f:
@@ -24,7 +26,7 @@ def switch_relay(pin, state):
     else:
         GPIO.setup(pin, GPIO.OUT)
         
-    logging.info(f"Relay {pin} switched to {'ON' if state else 'OFF'}")
+    logging.info(f"Relay {pin} switched {'OFF' if state else 'ON'}")
 
 def get_interpolated_sensor_data(sensor_name):
     conn = sqlite3.connect('/home/pi/repos/DielsiGarden/sensor_data.db')
@@ -47,10 +49,11 @@ def get_interpolated_sensor_data(sensor_name):
 
 if __name__ == "__main__":
     try:
-        sensor_name = "YourSensorName"  # Replace with your actual sensor name
-        data = 7 #TODO: get_interpolated_sensor_data(sensor_name)
+        sensor_name = "left-side"  # Replace with your actual sensor name
+        data = random.randint(0,15) #TODO: get_interpolated_sensor_data(sensor_name)
+        now = datetime.datetime.now()
         if data is not None:
-            logging.info(f"Interpolated data for {sensor_name}: {data}")
+            logging.info(f"{now} - data for {sensor_name}: {data}")
             
             # Check the sensor data and control the relays accordingly
             if data < thresholds['relay1']['lower']:
@@ -62,7 +65,7 @@ if __name__ == "__main__":
                 switch_relay(relay_pins['relay2'], GPIO.LOW)
             elif data > thresholds['relay2']['upper']:
                 switch_relay(relay_pins['relay2'], GPIO.HIGH)
-            
-    except KeyboardInterrupt:
+                
+    except:
         GPIO.cleanup()
-        logging.info("Cleaned up GPIO")
+        logging.critical("Exception thrown")

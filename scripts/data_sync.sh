@@ -1,6 +1,9 @@
 #!/bin/bash
+# redirect stdout/stderr to a file
+exec >logs/data_sync.log 2>&1
 
-echo 'connected to network syncing data...'
+DATE=$(date +"%Y-%m-%d_%H%M")
+echo 'INFO: '+$DATE+'- connected to network. syncing data...'
 
 REPO_URL="https://github.com/ZbindenDaniel/DielsiGarden.git"
 LOCAL_DIR="/home/pi/repos/DielsiGarden"
@@ -16,4 +19,4 @@ git stage img/*
 git commit -m 'fromPi '$(date +"%Y-%m-%d_%H%M")
 git push
  
-echo "sync completed"
+echo "INFO:sync completed"

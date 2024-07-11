@@ -6,11 +6,11 @@
     "thresholds": {
         "relay1": {
             "upper": 12,
-            "lower": 5
+            "lower": 7
         },
         "relay2": {
-            "upper": 10,
-            "lower": 6
+            "upper": 9,
+            "lower":5
         }
     },
     "hold_times": {
