@@ -7,6 +7,7 @@ import time
 import json
 import numpy as np
 import random
+import collections
 
 # Load configuration
 with open('/home/pi/repos/DielsiGarden/config.json', 'r') as f:
@@ -47,8 +48,23 @@ def get_interpolated_sensor_data(sensor_name):
     
     return interpolated_value
 
+# Function to load data from file
+def load_data_from_file():
+    if os.path.exists(DATA_FILE):
+        try:
+            with open(DATA_FILE, 'r') as file:
+                data = json.load(file)
+                return collections.deque(data, maxlen=N)
+        except (FileNotFoundError, json.JSONDecodeError):
+            return collections.deque(maxlen=N)
+    else:
+        return collections.deque(maxlen=N)
+
+# Load existing data from file
+
 if __name__ == "__main__":
     try:
+        data_deque = load_data_from_file()
         sensor_name = "left-side"  # Replace with your actual sensor name
         data = random.randint(0,15) #TODO: get_interpolated_sensor_data(sensor_name)
         now = datetime.datetime.now()

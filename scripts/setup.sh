@@ -15,6 +15,7 @@ chmod +x $REPO_DIR/scripts/*.sh
 # install libs
 apt-get install pipx
 pipx install numpy
+pip install miflora
 
 # Copy systemd service files to /etc/systemd/system/
 cp $REPO_DIR/systemd/*.service /etc/systemd/system/

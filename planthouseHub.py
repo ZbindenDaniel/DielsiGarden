@@ -11,6 +11,7 @@ from configparser import ConfigParser
 from datetime import datetime
 from miflora.miflora_poller import MiFloraPoller, MI_BATTERY, MI_LIGHT, MI_CONDUCTIVITY, MI_MOISTURE, MI_TEMPERATURE
 from btlewrap.bluepy import BluepyBackend
+import collections
 import logging
 
 class IotDevice:
@@ -72,6 +73,31 @@ def authenticate():
 def DisectResponse(response):
     print(response) # TODO: foreach sensor a json is returned. replace IotNodeSettingsModel from api with structure from .ini and replace .ini by json
 
+DATA_FILE = '/home/pi/repos/DielsiGarden/data/sensors.json'
+
+# Define the maximum number of data sets you want to keep
+N = 145 # script running every 20 minutes, for 24h, 2 sensors 
+
+# Function to load data from file
+def load_data_from_file():
+    if os.path.exists(DATA_FILE):
+        try:
+            with open(DATA_FILE, 'r') as file:
+                data = json.load(file)
+                return collections.deque(data, maxlen=N)
+        except (FileNotFoundError, json.JSONDecodeError):
+            return collections.deque(maxlen=N)
+    else:
+        return collections.deque(maxlen=N)
+
+# Load existing data from file
+data_deque = load_data_from_file()
+
+# Function to save data to file
+def save_data_to_file(data_deque):
+    with open(DATA_FILE, 'w') as file:
+        json.dump(list(data_deque), file)
+        
 def main():
 
     # url
@@ -80,44 +106,45 @@ def main():
     authenticated = False
 
     # device
-    deviceConfigs = json.loads(config['Device'].get('Devices'))
+    # deviceConfigs = json.loads(config['Device'].get('Devices'))
 
     initSensors()
     authenticationAttempts = 0
     sensorReadingAttempts = 0
     uploadCount = 0
-    while True:
-        try:
-            if authenticated:
-                for sensor in sensors:
-
-                    data = sensor.getSensorReadings()
-
-                    x = requests.post(endPoint, headers=headers, json=data)
-                    if x.status_code == 401:
-                        authenticated = False
-                    elif x.status_code == 422:
-                        print(x.text)
-                        # TODO: Often the timeout is not matched. so it would need a second try a little bit later, but only once or twice
-                    elif x.status_code != 200:
-                        logging.warning(f'{datetime.now()}: {x.status_code} - {x.text}')
-                    uploadCount = uploadCount + 1
-                    if uploadCount >= config['Settings'].getint('LogDataUploadCycle'):
-                        print("TODO: Upload Logfile and delete oldOne") # probably better to have in own loop or even service but first needs implemntation in API
-                    DisectResponse(res)
-                time.sleep(config['Settings'].getint('LoopTimeout'))
-            else:
-                authenticationAttempts += 1
-                if authenticationAttempts >= config['Settings'].getint('MaxAuthenticationAttempts'):
-                    break
-                authenticated = authenticate()
-                time.sleep(config['Settings'].getint('AuthenticationTimeout'))
-            
-        except Exception as err:
-            logging.critical(f"Unexpected {err=}, {type(err)=} - {err.message}")
-            time.sleep(1)
-            if sensorReadingAttempts >= config['Settings'].getint('MaxSensorReadingAttempts'):
+    try:
+        while not authenticated:
+            authenticationAttempts += 1
+            if authenticationAttempts >= config['Settings'].getint('MaxAuthenticationAttempts'):
                 break
+            authenticated = authenticate()
+            time.sleep(config['Settings'].getint('AuthenticationTimeout'))
+        if authenticated:
+            for sensor in sensors:
+                data = sensor.getSensorReadings()
+                !!!
+                # TODO: the authentication part is optional for local data storage. so the data is collected and the comes the authentication. or maybe the authentication belongs into a whole new file
+                data_deque.append(data)
+                save_data_to_file(data_deque)
+                x = requests.post(endPoint, headers=headers, json=data)
+                if x.status_code == 401:
+                    authenticated = False
+                elif x.status_code == 422:
+                    print(x.text)
+                    # TODO: Often the timeout is not matched. so it would need a second try a little bit later, but only once or twice
+                elif x.status_code != 200:
+                    logging.warning(f'{datetime.now()}: {x.status_code} - {x.text}')
+                uploadCount = uploadCount + 1
+                if uploadCount >= config['Settings'].getint('LogDataUploadCycle'):
+                    print("TODO: Upload Logfile and delete oldOne") # probably better to have in own loop or even service but first needs implemntation in API
+                DisectResponse(res)
+            time.sleep(config['Settings'].getint('LoopTimeout'))
+            
+    except Exception as err:
+        logging.critical(f"Unexpected {err=}, {type(err)=} - {err.message}")
+        time.sleep(1)
+        if sensorReadingAttempts >= config['Settings'].getint('MaxSensorReadingAttempts'):
+            return
     print("Exit Program")
 
 config = {}
@@ -135,7 +162,7 @@ if __name__ == "__main__":
     config = ConfigParser(delimiters=('=', ), inline_comment_prefixes=('#'))
     config.optionxform = str
     try:
-        logging.basicConfig(filename=os.path.join(config_dir, 'planthouse.log'), encoding='utf-8', level=logging.DEBUG)
+        logging.basicConfig(filename=os.path.join(config_dir, 'logs/planthouse.log'), encoding='utf-8', level=logging.DEBUG)
     except IOError:
         print("Cannot open logFile")
         sys.exit(1)
