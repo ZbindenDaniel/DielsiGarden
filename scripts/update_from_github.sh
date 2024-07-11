@@ -19,5 +19,3 @@ git commit -m $msg
 git push
  
 echo "sync completed"
-
-echo "run setup"
