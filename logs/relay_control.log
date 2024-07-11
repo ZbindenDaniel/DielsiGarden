@@ -213,3 +213,8 @@ INFO:root:2024-07-11 12:43:02.953729 - data for left-side: 7
 INFO:root:2024-07-11 12:43:02.974757 - data for left-side: 1
 INFO:root:Relay 10 switched ON
 INFO:root:Relay 9 switched ON
+INFO:root:2024-07-11 12:44:02.492524 - data for left-side: 12
+INFO:root:Relay 9 switched OFF
+INFO:root:2024-07-11 12:44:02.652975 - data for left-side: 4
+INFO:root:Relay 10 switched ON
+INFO:root:Relay 9 switched ON
