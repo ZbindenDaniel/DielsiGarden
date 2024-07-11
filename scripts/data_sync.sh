@@ -1,12 +1,14 @@
 #!/bin/bash
 # redirect stdout/stderr to a file
-exec >logs/data_sync.log 2>&1
+LOCAL_DIR="/home/pi/repos/DielsiGarden"
+
+exec >$LOCAL_DIR/logs/data_sync.log 2>&1
 
 DATE=$(date +"%Y-%m-%d_%H%M")
 echo 'INFO: '+$DATE+'- connected to network. syncing data...'
 
+
 REPO_URL="https://github.com/ZbindenDaniel/DielsiGarden.git"
-LOCAL_DIR="/home/pi/repos/DielsiGarden"
 
 # Navigate to the project directory
 cd $LOCAL_DIR
