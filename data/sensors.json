@@ -1,0 +1,98 @@
+[
+    {
+        "Temperature": 12,
+        "humidity": 65,
+        "pressure": 1432,
+        "illuminance": 1123,
+        "uva": 804,
+        "uvb": 1664,
+        "uvIndex": 371,
+        "BatteryLevel": 82,
+        "DeviceId": "1",
+        "TimeStamp": "16.07.2024 - 16:36:19"
+    },
+    {
+        "Temperature": 9,
+        "humidity": 87,
+        "pressure": 1425,
+        "illuminance": 1344,
+        "uva": 960,
+        "uvb": 1231,
+        "uvIndex": 374,
+        "BatteryLevel": 35,
+        "DeviceId": "2",
+        "TimeStamp": "16.07.2024 - 16:36:24"
+    },
+    {
+        "Temperature": 6,
+        "humidity": 36,
+        "pressure": 763,
+        "illuminance": 1155,
+        "uva": 1466,
+        "uvb": 1178,
+        "uvIndex": 1276,
+        "BatteryLevel": 99,
+        "DeviceId": "1",
+        "TimeStamp": "16.07.2024 - 16:37:07"
+    },
+    {
+        "Temperature": 29,
+        "humidity": 64,
+        "pressure": 1417,
+        "illuminance": 1155,
+        "uva": 956,
+        "uvb": 1867,
+        "uvIndex": 1835,
+        "BatteryLevel": 85,
+        "DeviceId": "2",
+        "TimeStamp": "16.07.2024 - 16:37:11"
+    },
+    {
+        "Temperature": 24,
+        "humidity": 90,
+        "pressure": 1445,
+        "illuminance": 1416,
+        "uva": 790,
+        "uvb": 1010,
+        "uvIndex": 1108,
+        "BatteryLevel": 23,
+        "DeviceId": "1",
+        "TimeStamp": "16.07.2024 - 16:57:05"
+    },
+    {
+        "Temperature": -12,
+        "humidity": 88,
+        "pressure": 1000,
+        "illuminance": 1038,
+        "uva": 724,
+        "uvb": 1395,
+        "uvIndex": 1446,
+        "BatteryLevel": 56,
+        "DeviceId": "2",
+        "TimeStamp": "16.07.2024 - 16:57:09"
+    },
+    {
+        "Temperature": 28,
+        "humidity": 98,
+        "pressure": 721,
+        "illuminance": 1256,
+        "uva": 1499,
+        "uvb": 1470,
+        "uvIndex": 1032,
+        "BatteryLevel": 36,
+        "DeviceId": "1",
+        "TimeStamp": "16.07.2024 - 16:57:40"
+    },
+    {
+        "Temperature": 26,
+        "humidity": 34,
+        "pressure": 978,
+        "illuminance": 1249,
+        "uva": 1424,
+        "uvb": 1179,
+        "uvIndex": 697,
+        "BatteryLevel": 12,
+        "DeviceId": "2",
+        "TimeStamp": "16.07.2024 - 16:57:40"
+    }
+]

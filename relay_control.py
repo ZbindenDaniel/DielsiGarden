@@ -8,6 +8,8 @@ import json
 import numpy as np
 import random
 import collections
+import os
+import pandas as pd
 
 # Load configuration
 with open('/home/pi/repos/DielsiGarden/config.json', 'r') as f:
@@ -29,15 +31,26 @@ def switch_relay(pin, state):
         
     logging.info(f"Relay {pin} switched {'OFF' if state else 'ON'}")
 
-def get_interpolated_sensor_data(sensor_name):
-    conn = sqlite3.connect('/home/pi/repos/DielsiGarden/sensor_data.db')
-    cursor = conn.cursor()
-    cursor.execute('SELECT timestamp, data FROM sensor_data WHERE sensor_name = ? ORDER BY timestamp DESC LIMIT 10', (sensor_name,))
-    rows = cursor.fetchall()
-    conn.close()
+DATA_FILE = '/home/pi/repos/DielsiGarden/data/sensors.json' # TODO: move tom common module or config
+
+def get_interpolated_humidity(data_deque):
+    df = pd.read_json(DATA_FILE)
     
-    if len(rows) < 2:
-        return None  # Not enough data for interpolation
+    sensor_id = 1
+    filtered_df = df[df['DeviceId'] == sensor_id]
+    print(filtered_df)
+    start_date = '16.07.2024 - 16:36:19'
+    end_date = '16.07.2024 - 16:38:19'
+    filtered_df = df[(df['DeviceId'] == sensor_id) & (df['TimeStamp'] >= start_date) & (df['TimeStamp'] <= end_date)]
+    print(filtered_df)
+    # conn = sqlite3.connect('/home/pi/repos/DielsiGarden/sensor_data.db')
+    # cursor = conn.cursor()
+    # cursor.execute('SELECT timestamp, data FROM sensor_data WHERE sensor_name = ? ORDER BY timestamp DESC LIMIT 10', (sensor_name,))
+    # rows = cursor.fetchall()
+    # conn.close()
+    
+    # if len(rows) < 2:
+    #     return None  # Not enough data for interpolation
     
     times = [time.mktime(time.strptime(row[0], '%Y-%m-%d %H:%M:%S')) for row in rows]
     values = [row[1] for row in rows]
@@ -49,6 +62,8 @@ def get_interpolated_sensor_data(sensor_name):
     return interpolated_value
 
 # Function to load data from file
+N = 145 # script running every 20 minutes, for 24h, 2 sensors 
+
 def load_data_from_file():
     if os.path.exists(DATA_FILE):
         try:
@@ -65,8 +80,7 @@ def load_data_from_file():
 if __name__ == "__main__":
     try:
         data_deque = load_data_from_file()
-        sensor_name = "left-side"  # Replace with your actual sensor name
-        data = random.randint(0,15) #TODO: get_interpolated_sensor_data(sensor_name)
+        data = get_interpolated_humidity(data_deque)
         now = datetime.datetime.now()
         if data is not None:
             logging.info(f"{now} - data for {sensor_name}: {data}")
